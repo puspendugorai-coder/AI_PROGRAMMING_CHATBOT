@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeMind — AI Programming Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Marked.js for markdown rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+    <!-- Highlight.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <span class="logo-icon">⟨/⟩</span>
+            <span class="logo-text">CodeMind</span>
+        </div>
+        <p class="logo-sub">AI Programming Assistant</p>
+    </div>
+
+    <!-- Language Selector -->
+    <div class="lang-selector-wrap">
+        <label class="selector-label">Select Language</label>
+        <div class="custom-select-wrap">
+            <select id="language-select" class="lang-select">
+                <option value="">-- Choose a Language --</option>
+                {% for lang in languages %}
+                <option value="{{ lang }}">{{ lang }}</option>
+                {% endfor %}
+            </select>
+            <span class="select-arrow">▾</span>
+        </div>
+    </div>
+
+    <!-- Topics Panel (shown after language selection) -->
+    <div class="topics-panel" id="topics-panel" style="display:none">
+        <div class="topics-tabs">
+            <button class="tab-btn active" data-tab="libraries">Libraries</button>
+            <button class="tab-btn" data-tab="modules">Modules</button>
+            <button class="tab-btn" data-tab="keywords">Keywords</button>
+            <button class="tab-btn" data-tab="functions">Functions</button>
+            <button class="tab-btn" data-tab="oop">OOP</button>
+            <button class="tab-btn" data-tab="tutorials">Tutorials</button>
+        </div>
+        <div class="topics-list" id="topics-list"></div>
+    </div>
+</aside>
+
+<!-- ===== MAIN AREA ===== -->
+<main class="main-content">
+
+    <!-- Top Bar -->
+    <!-- Top Bar -->
+    <header class="topbar">
+        <button class="menu-btn" id="menu-toggle">☰</button>
+        <div class="topbar-title">
+            <span id="current-lang-display">No language selected</span>
+            <span class="topbar-sub" id="topic-breadcrumb"></span>
+        </div>
+        <button class="history-btn" id="history-btn" title="Search History">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            History
+        </button>
+    </header>
+
+    <!-- History Side Panel -->
+    <div class="history-overlay" id="history-overlay"></div>
+    <div class="history-panel" id="history-panel">
+        <div class="history-header">
+            <div class="history-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Search History
+            </div>
+            <div class="history-header-actions">
+                <button class="history-clear-all" id="history-clear-all" title="Clear all history">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                        <polyline points="3 6 5 6 21 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Clear all
+                </button>
+                <button class="history-close" id="history-close">✕</button>
+            </div>
+        </div>
+        <div class="history-search-wrap">
+            <input type="text" id="history-search" placeholder="Search history..." class="history-search-input"/>
+        </div>
+        <div class="history-list" id="history-list">
+            <div class="history-empty">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" opacity="0.3">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+                    <polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <p>No history yet</p>
+                <span>Your questions will appear here</span>
+            </div>
+        </div>
+    </div>
+    <!-- Chat Area -->
+    <div class="chat-area" id="chat-area">
+        <div class="welcome-screen" id="welcome-screen">
+            <div class="welcome-icon">⟨/⟩</div>
+            <h1>Welcome to CodeMind</h1>
+            <p>Select a programming language from the sidebar to explore topics, or just ask me any programming question below.</p>
+            <div class="quick-starts">
+                <button class="quick-btn" onclick="quickAsk('What is a decorator in Python?')">What is a decorator in Python?</button>
+                <button class="quick-btn" onclick="quickAsk('Explain async/await in JavaScript')">Explain async/await in JavaScript</button>
+                <button class="quick-btn" onclick="quickAsk('How does a linked list work?')">How does a linked list work?</button>
+                <button class="quick-btn" onclick="quickAsk('What is Big O notation?')">What is Big O notation?</button>
+            </div>
+        </div>
+        <div id="messages-container"></div>
+    </div>
+
+    <!-- Input Bar -->
+    <div class="input-bar">
+        <div class="input-wrap">
+            <textarea id="chat-input" placeholder="Ask a question related to programming..." rows="1"></textarea>
+            <button id="send-btn" class="send-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        <p class="input-hint" id="input-hint">
+            <span id="hint-text">⚠️ No language selected — general programming questions only</span>
+        </p>
+    </div>
+</main>
+
+<!-- Topic Info Modal -->
+<div class="modal-overlay" id="modal-overlay" style="display:none">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modal-title">Topic</h3>
+            <button class="modal-close" id="modal-close">✕</button>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <div class="loading-dots"><span></span><span></span><span></span></div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script>
+    // Pass language data from Flask to JS
+    const LANGUAGE_DATA = {{ language_data | tojson }};
+</script>
+</body>
+</html>
