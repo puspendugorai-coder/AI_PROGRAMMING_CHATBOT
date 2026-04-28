@@ -7,7 +7,7 @@ CodeMind is a sophisticated full-stack AI chatbot specialized which helps to ans
 ## 🚀 Live Demo
 Experience the assistant live on Hugging Face Spaces:
 
-[**👉Click here to open**](https://alphacoder7206-ai-programming-chatbot.hf.space)
+## 👉 [Click Here to Open..](https://alphacoder7206-ai-programming-chatbot.hf.space)
 
 ---
 
