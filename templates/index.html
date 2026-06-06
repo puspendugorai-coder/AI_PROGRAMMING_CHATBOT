@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +7,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Marked.js for markdown rendering -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
-    <!-- Highlight.js for syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" id="hljs-theme">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -25,7 +24,6 @@
         <p class="logo-sub">AI Programming Assistant</p>
     </div>
 
-    <!-- Language Selector -->
     <div class="lang-selector-wrap">
         <label class="selector-label">Select Language</label>
         <div class="custom-select-wrap">
@@ -39,7 +37,6 @@
         </div>
     </div>
 
-    <!-- Topics Panel (shown after language selection) -->
     <div class="topics-panel" id="topics-panel" style="display:none">
         <div class="topics-tabs">
             <button class="tab-btn active" data-tab="libraries">Libraries</button>
@@ -51,12 +48,15 @@
         </div>
         <div class="topics-list" id="topics-list"></div>
     </div>
+
+    <div class="sidebar-footer">
+        <p>Powered by <span class="groq-badge">Groq</span> + LLaMA 3</p>
+    </div>
 </aside>
 
 <!-- ===== MAIN AREA ===== -->
 <main class="main-content">
 
-    <!-- Top Bar -->
     <!-- Top Bar -->
     <header class="topbar">
         <button class="menu-btn" id="menu-toggle">☰</button>
@@ -64,16 +64,93 @@
             <span id="current-lang-display">No language selected</span>
             <span class="topbar-sub" id="topic-breadcrumb"></span>
         </div>
-        <button class="history-btn" id="history-btn" title="Search History">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            History
-        </button>
+        <div class="topbar-actions">
+            <!-- Sessions -->
+            <button class="topbar-btn" id="sessions-btn" title="Chat Sessions">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Sessions
+            </button>
+            <!-- Export -->
+            <div class="export-wrap">
+                <button class="topbar-btn" id="export-btn" title="Export Chat">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <polyline points="7 10 12 15 17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Export
+                </button>
+                <div class="export-dropdown" id="export-dropdown">
+                    <button class="export-option" id="export-md">
+                        <span>📄</span> Markdown (.md)
+                    </button>
+                    <button class="export-option" id="export-pdf">
+                        <span>📕</span> PDF (.pdf)
+                    </button>
+                </div>
+            </div>
+            <!-- Theme -->
+            <button class="topbar-btn icon-only" id="theme-btn" title="Toggle Theme">
+                <svg id="theme-icon-dark" width="15" height="15" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <svg id="theme-icon-light" width="15" height="15" viewBox="0 0 24 24" fill="none" style="display:none">
+                    <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+                    <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+
+            <!-- ===== HAMBURGER MENU (replaces standalone History button) ===== -->
+            <div class="hamburger-wrap">
+                <button class="hamburger-btn" id="hamburger-btn" title="Menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+                <div class="hamburger-dropdown" id="hamburger-dropdown">
+                    <button class="hdd-item" id="new-chat-btn">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        New Chat
+                    </button>
+                    <div class="hdd-divider"></div>
+                    <button class="hdd-item" id="history-btn">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        History
+                    </button>
+                </div>
+            </div>
+            <!-- ===== END HAMBURGER MENU ===== -->
+        </div>
     </header>
 
-    <!-- History Side Panel -->
+    <!-- Sessions Panel -->
+    <div class="panel-overlay" id="sessions-overlay"></div>
+    <div class="side-panel" id="sessions-panel">
+        <div class="panel-header">
+            <span class="panel-title">💬 Chat Sessions</span>
+            <div class="panel-header-actions">
+                <button class="panel-new-btn" id="new-session-btn">+ New</button>
+                <button class="panel-close-btn" id="sessions-close">✕</button>
+            </div>
+        </div>
+        <div class="sessions-list" id="sessions-list"></div>
+    </div>
+
+    <!-- History Panel -->
     <div class="history-overlay" id="history-overlay"></div>
     <div class="history-panel" id="history-panel">
         <div class="history-header">
@@ -110,13 +187,14 @@
             </div>
         </div>
     </div>
+
     <!-- Chat Area -->
     <div class="chat-area" id="chat-area">
         <div class="welcome-screen" id="welcome-screen">
             <div class="welcome-icon">⟨/⟩</div>
             <h1>Welcome to CodeMind</h1>
             <p>Select a programming language from the sidebar to explore topics, or just ask me any programming question below.</p>
-            <div class="quick-starts">
+            <div class="quick-starts" id="quick-starts">
                 <button class="quick-btn" onclick="quickAsk('What is a decorator in Python?')">What is a decorator in Python?</button>
                 <button class="quick-btn" onclick="quickAsk('Explain async/await in JavaScript')">Explain async/await in JavaScript</button>
                 <button class="quick-btn" onclick="quickAsk('How does a linked list work?')">How does a linked list work?</button>
@@ -129,7 +207,15 @@
     <!-- Input Bar -->
     <div class="input-bar">
         <div class="input-wrap">
-            <textarea id="chat-input" placeholder="Ask a question related to programming..." rows="1"></textarea>
+            <button class="voice-btn" id="voice-btn" title="Voice input">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                    <rect x="9" y="2" width="6" height="11" rx="3" stroke="currentColor" stroke-width="2"/>
+                    <path d="M5 10a7 7 0 0014 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="8" y1="23" x2="16" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <textarea id="chat-input" placeholder="Ask a programming question..." rows="1"></textarea>
             <button id="send-btn" class="send-btn">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -158,7 +244,6 @@
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 <script>
-    // Pass language data from Flask to JS
     const LANGUAGE_DATA = {{ language_data | tojson }};
 </script>
 </body>
