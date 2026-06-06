@@ -1276,3 +1276,624 @@ body {
         right: -100%;
     }
 }
+/* ── Stop button mode ───────────────────────────── */
+.send-btn.stop-mode {
+    background: linear-gradient(135deg, #f85149, #ff6b6b);
+    box-shadow: 0 2px 8px rgba(248, 81, 73, 0.4);
+    animation: pulse-red 1.4s ease infinite;
+}
+
+.send-btn.stop-mode:hover {
+    box-shadow: 0 4px 14px rgba(248, 81, 73, 0.55);
+}
+
+@keyframes pulse-red {
+
+    0%,
+    100% {
+        box-shadow: 0 2px 8px rgba(248, 81, 73, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 2px 18px rgba(248, 81, 73, 0.7);
+    }
+}
+
+/* ── Stopped tag shown at end of truncated response ─ */
+.stopped-tag {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text2);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 2px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+}
+/* ========== THEME — LIGHT MODE ========== */
+[data-theme="light"] {
+    --bg: #f6f8fa;
+    --bg2: #ffffff;
+    --bg3: #eaeef2;
+    --border: #d0d7de;
+    --text: #1f2328;
+    --text2: #656d76;
+    --accent: #0969da;
+    --accent2: #1a7f37;
+    --purple: #8250df;
+    --red: #cf222e;
+    --yellow: #9a6700;
+}
+
+[data-theme="light"] .message.ai .msg-bubble {
+    background: linear-gradient(135deg, rgba(9, 105, 218, 0.04), rgba(130, 80, 223, 0.04));
+    border-color: rgba(9, 105, 218, 0.15);
+}
+
+[data-theme="light"] .message.ai .msg-bubble::before {
+    background: linear-gradient(to bottom, var(--accent), var(--purple));
+}
+
+[data-theme="light"] .ai-response-body pre {
+    background: #f6f8fa !important;
+}
+
+[data-theme="light"] #hljs-theme {
+    display: none;
+}
+
+/* ========== TOPBAR ACTIONS ========== */
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.topbar-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.topbar-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(88, 166, 255, 0.06);
+}
+
+.topbar-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(88, 166, 255, 0.1);
+}
+
+.topbar-btn.icon-only {
+    padding: 6px 10px;
+}
+
+/* ========== EXPORT DROPDOWN ========== */
+.export-wrap {
+    position: relative;
+}
+
+.export-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    z-index: 100;
+    min-width: 170px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.export-dropdown.open {
+    display: block;
+}
+
+.export-option {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    padding: 10px 14px;
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    text-align: left;
+}
+
+.export-option:hover {
+    background: var(--bg3);
+}
+
+/* ========== SESSIONS PANEL ========== */
+.panel-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 299;
+    backdrop-filter: blur(2px);
+}
+
+.panel-overlay.open {
+    display: block;
+}
+
+.side-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 340px;
+    height: 100vh;
+    background: var(--bg2);
+    border-left: 1px solid var(--border);
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.3);
+}
+
+.side-panel.open {
+    right: 0;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg3);
+    flex-shrink: 0;
+}
+
+.panel-title {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.panel-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.panel-new-btn {
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 7px;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.panel-new-btn:hover {
+    opacity: 0.85;
+}
+
+.panel-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text2);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.panel-close-btn:hover {
+    background: var(--bg);
+    color: var(--text);
+}
+
+.sessions-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+.session-item {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border-radius: 9px;
+    margin-bottom: 4px;
+    border: 1px solid transparent;
+    overflow: hidden;
+    transition: all 0.15s;
+    cursor: pointer;
+}
+
+.session-item:hover {
+    background: var(--bg3);
+    border-color: var(--border);
+}
+
+.session-item.active {
+    background: rgba(88, 166, 255, 0.08);
+    border-color: rgba(88, 166, 255, 0.25);
+}
+
+.session-item-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 10px 12px;
+    text-align: left;
+    cursor: pointer;
+    min-width: 0;
+}
+
+.session-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 3px;
+}
+
+.session-meta {
+    font-size: 11px;
+    color: var(--text2);
+}
+
+.session-actions {
+    display: flex;
+    gap: 2px;
+    padding-right: 8px;
+}
+
+.session-action-btn {
+    background: transparent;
+    border: none;
+    color: var(--text2);
+    padding: 5px 7px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.15s;
+}
+
+.session-item:hover .session-action-btn {
+    opacity: 1;
+}
+
+.session-action-btn:hover {
+    background: var(--bg);
+    color: var(--text);
+}
+
+.session-action-btn.del:hover {
+    color: var(--red);
+}
+
+/* ========== VOICE BUTTON ========== */
+.voice-btn {
+    background: transparent;
+    border: none;
+    color: var(--text2);
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.voice-btn:hover {
+    color: var(--accent);
+    background: rgba(88, 166, 255, 0.08);
+}
+
+.voice-btn.listening {
+    color: var(--red);
+    background: rgba(248, 81, 73, 0.1);
+    animation: pulse-mic 1.2s ease infinite;
+}
+
+@keyframes pulse-mic {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px rgba(248, 81, 73, 0);
+    }
+}
+
+/* ========== CODE EXECUTION ========== */
+.run-code-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(126, 231, 135, 0.12);
+    border: 1px solid rgba(126, 231, 135, 0.25);
+    color: var(--accent2);
+    padding: 4px 11px;
+    border-radius: 6px;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 6px;
+}
+
+.run-code-btn:hover {
+    background: rgba(126, 231, 135, 0.2);
+    border-color: var(--accent2);
+}
+
+.run-code-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.code-output {
+    margin-top: 6px;
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: var(--font-code);
+    font-size: 12px;
+    color: var(--accent2);
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.code-output.error {
+    color: var(--red);
+}
+
+.code-output-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text2);
+    margin-bottom: 5px;
+}
+
+/* ========== HISTORY (existing — keep yours, these are additions) ========== */
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+
+    .topbar-btn span,
+    .topbar-btn:not(.icon-only) {
+        font-size: 0;
+        gap: 0;
+        padding: 6px 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        height: 100vh;
+        z-index: 200;
+    }
+
+    .sidebar.open {
+        left: 0;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .menu-btn {
+        display: block;
+    }
+
+    .quick-starts {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-screen {
+        margin: 30px auto;
+        padding: 0 10px;
+    }
+
+    .copy-msg-btn {
+        opacity: 1;
+    }
+
+    .side-panel {
+        width: 100%;
+        right: -100%;
+    }
+
+    .history-panel {
+        width: 100%;
+        right: -100%;
+    }
+}
+/* ========== HAMBURGER MENU ========== */
+.hamburger-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.hamburger-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+}
+
+.hamburger-btn:hover {
+    background: rgba(88, 166, 255, 0.08);
+    border-color: var(--accent);
+}
+
+.hamburger-btn.open {
+    background: rgba(88, 166, 255, 0.1);
+    border-color: var(--accent);
+}
+
+.hamburger-btn .bar {
+    display: block;
+    width: 16px;
+    height: 2px;
+    background: var(--text2);
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.2s ease, background 0.2s;
+    transform-origin: center;
+}
+
+.hamburger-btn:hover .bar,
+.hamburger-btn.open .bar {
+    background: var(--accent);
+}
+
+/* Animate to X when open */
+.hamburger-btn.open .bar:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+
+.hamburger-btn.open .bar:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.hamburger-btn.open .bar:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Dropdown panel */
+.hamburger-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    min-width: 190px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(88, 166, 255, 0.05);
+    z-index: 500;
+    overflow: hidden;
+    animation: hddFadeIn 0.15s ease;
+}
+
+@keyframes hddFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.hamburger-dropdown.open {
+    display: block;
+}
+
+/* Dropdown items */
+.hdd-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 16px;
+    background: none;
+    border: none;
+    color: var(--text2);
+    font-size: 13.5px;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+
+.hdd-item:hover {
+    background: rgba(88, 166, 255, 0.08);
+    color: var(--text);
+}
+
+.hdd-item:hover svg {
+    stroke: var(--accent);
+}
+
+.hdd-item svg {
+    flex-shrink: 0;
+    transition: stroke 0.15s;
+}
+
+/* New Chat item gets a green tint on hover */
+.hdd-item#new-chat-btn:hover {
+    background: rgba(126, 231, 135, 0.08);
+    color: var(--accent2);
+}
+
+.hdd-item#new-chat-btn:hover svg {
+    stroke: var(--accent2);
+}
+
+/* Divider */
+.hdd-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 3px 12px;
+}
+
+/* Light mode adjustments */
+[data-theme="light"] .hamburger-dropdown {
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
+}
